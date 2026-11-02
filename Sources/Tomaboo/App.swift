@@ -2,7 +2,7 @@ import SwiftUI
 import EventKit
 
 @main
-struct TomatoDoneApp: App {
+struct TomabooApp: App {
     @State private var model = TimerModel()
 
     var body: some Scene {
@@ -99,7 +99,7 @@ struct TimerPanel: View {
                 Button("管理类别…") { openCategories(openWindow) }
                     .keyboardShortcut(",")
                 Divider()
-                Button("退出 Tomato Done") { NSApp.terminate(nil) }
+                Button("退出 Tomaboo") { NSApp.terminate(nil) }
                     .keyboardShortcut("q")
             } label: {
                 Image(systemName: "slider.horizontal.3")

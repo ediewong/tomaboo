@@ -1,6 +1,6 @@
-<p align="center"><img src="docs/icon.png" width="128" alt="Tomato Done 图标"></p>
+<p align="center"><img src="docs/icon.png" width="128" alt="Tomaboo 图标"></p>
 
-<h1 align="center">Tomato Done</h1>
+<h1 align="center">Tomaboo</h1>
 
 <p align="center">番茄钟 + Done List 的 macOS 菜单栏应用。<br>每完成一个番茄钟，就在系统「日历」里自动记下一块时间——日历就是你的完成清单。</p>
 
@@ -16,11 +16,11 @@
 
 ## 安装
 
-1. 在 [Releases](https://github.com/ediewong/tomato-done/releases) 下载 `TomatoDone.zip`，解压后把 `TomatoDone.app` 拖进「应用程序」
-2. **首次打开**：这个 App 还没有经过苹果公证，系统会拦截。打开「系统设置 › 隐私与安全性」，在下方找到 Tomato Done，点「仍要打开」。
+1. 在 [Releases](https://github.com/ediewong/tomato-done/releases) 下载 `Tomaboo.zip`，解压后把 `Tomaboo.app` 拖进「应用程序」
+2. **首次打开**：这个 App 还没有经过苹果公证，系统会拦截。打开「系统设置 › 隐私与安全性」，在下方找到 Tomaboo，点「仍要打开」。
    也可以在终端运行：
    ```bash
-   xattr -dr com.apple.quarantine /Applications/TomatoDone.app
+   xattr -dr com.apple.quarantine /Applications/Tomaboo.app
    ```
 3. 点开始时允许访问日历
 
@@ -40,18 +40,18 @@
 ```bash
 xcode-select --install   # 如果还没装命令行工具
 ./build.sh               # 构建本机版本并启动
-./build.sh release       # 构建通用版本，打包成 TomatoDone.zip
+./build.sh release       # 构建通用版本，打包成 Tomaboo.zip
 ```
 
 ## 项目结构
 
 | 文件 | 内容 |
 |---|---|
-| `Sources/TomatoDone/App.swift` | 菜单栏面板和类别管理界面 |
-| `Sources/TomatoDone/TimerModel.swift` | 计时、类别、写入日历的流程 |
-| `Sources/TomatoDone/CalendarService.swift` | 用 EventKit 读写系统日历 |
-| `Sources/TomatoDone/DurationRuler.swift` | 可拖动的时长刻度尺 |
-| `Sources/TomatoDone/MenuBarPill.swift` | 菜单栏的计时胶囊和番茄图标 |
+| `Sources/Tomaboo/App.swift` | 菜单栏面板和类别管理界面 |
+| `Sources/Tomaboo/TimerModel.swift` | 计时、类别、写入日历的流程 |
+| `Sources/Tomaboo/CalendarService.swift` | 用 EventKit 读写系统日历 |
+| `Sources/Tomaboo/DurationRuler.swift` | 可拖动的时长刻度尺 |
+| `Sources/Tomaboo/MenuBarPill.swift` | 菜单栏的计时胶囊和番茄图标 |
 
 ## 许可
 

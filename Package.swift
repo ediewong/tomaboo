@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "TomatoDone",
+    name: "Tomaboo",
     platforms: [.macOS(.v14)],
-    targets: [.executableTarget(name: "TomatoDone")]
+    targets: [.executableTarget(name: "Tomaboo")]
 )
