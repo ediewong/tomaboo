@@ -16,7 +16,7 @@
 
 ## 安装
 
-1. 在 [Releases](https://github.com/ediewong/tomato-done/releases) 下载 `Tomaboo.zip`，解压后把 `Tomaboo.app` 拖进「应用程序」
+1. 在 [Releases](https://github.com/ediewong/tomaboo/releases) 下载 `Tomaboo.zip`，解压后把 `Tomaboo.app` 拖进「应用程序」
 2. **首次打开**：这个 App 还没有经过苹果公证，系统会拦截。打开「系统设置 › 隐私与安全性」，在下方找到 Tomaboo，点「仍要打开」。
    也可以在终端运行：
    ```bash
