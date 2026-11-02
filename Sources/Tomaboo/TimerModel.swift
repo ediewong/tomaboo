@@ -122,7 +122,7 @@ final class TimerModel {
     }
 
     func start() {
-        guard selected != nil else { message = "先选一个类别"; return }
+        guard selected != nil else { message = "先选一个标签"; return }
         startDate = Date()
         now = startDate!
         message = nil

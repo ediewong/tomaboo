@@ -6,7 +6,7 @@ final class CalendarService {
     private(set) var store = EKEventStore()
 
     struct MissingCalendar: LocalizedError {
-        var errorDescription: String? { "绑定的日历不存在了，请在「管理类别」里重新绑定" }
+        var errorDescription: String? { "这个标签对应的日历找不到了，请在「管理标签」里重新选一个日历" }
     }
 
     func requestAccess() async -> Bool {

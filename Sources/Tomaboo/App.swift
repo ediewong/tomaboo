@@ -13,7 +13,7 @@ struct TomabooApp: App {
         }
         .menuBarExtraStyle(.window)
 
-        Window("类别", id: "categories") {
+        Window("标签", id: "categories") {
             CategoriesView().environment(model)
         }
         .windowResizability(.contentSize)
@@ -63,14 +63,7 @@ struct TimerPanel: View {
         VStack(spacing: 18) {
             header
             if model.categories.isEmpty {
-                ContentUnavailableView {
-                    Label("还没有类别", systemImage: "square.stack.3d.up")
-                } description: {
-                    Text("每个类别对应「日历」中的一个日历，完成的番茄钟会记录进去。")
-                } actions: {
-                    Button("添加类别") { openCategories(openWindow) }
-                        .buttonStyle(CapsuleButtonStyle())
-                }
+                EmptyState { openCategories(openWindow) }
             } else {
                 TimerContent()
             }
@@ -96,7 +89,7 @@ struct TimerPanel: View {
             Spacer()
 
             Menu {
-                Button("管理类别…") { openCategories(openWindow) }
+                Button("管理标签…") { openCategories(openWindow) }
                     .keyboardShortcut(",")
                 Divider()
                 Button("退出 Tomaboo") { NSApp.terminate(nil) }
@@ -141,13 +134,13 @@ private struct TimerContent: View {
                 HStack(spacing: 6) {
                     ColorDot(color: tint, size: 8)
                     Menu {
-                        Picker("类别", selection: $model.selectedID) {
+                        Picker("标签", selection: $model.selectedID) {
                             ForEach(model.categories) { Text($0.name).tag(Optional($0.id)) }
                         }
                         .pickerStyle(.inline)
                         .labelsHidden()
                     } label: {
-                        Text(model.selected?.name ?? "选择类别")
+                        Text(model.selected?.name ?? "选择标签")
                     }
                     .menuStyle(.borderlessButton)
                     .fixedSize()
@@ -217,6 +210,35 @@ private struct TimerContent: View {
     }
 }
 
+/// 第一次使用、还没有标签时的引导
+private struct EmptyState: View {
+    var onCreate: () -> Void
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Image(nsImage: tomatoIcon)
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 48, height: 48)
+                .foregroundStyle(.secondary)
+                .padding(.top, 8)
+            VStack(spacing: 8) {
+                Text("先建一个标签")
+                    .font(.system(size: 17, weight: .semibold))
+                Text("比如「学习」「工作」。\n完成的番茄钟会按标签自动记进日历。")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Button("新建标签", action: onCreate)
+                .buttonStyle(CapsuleButtonStyle())
+                .keyboardShortcut(.defaultAction)
+        }
+    }
+}
+
 /// 倒计时 / 正计时 二选一卡片
 private struct ModeCard: View {
     @Binding var countdown: Bool
@@ -259,6 +281,7 @@ struct CapsuleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 14, weight: .semibold))
+            .padding(.horizontal, 20)
             .foregroundStyle(prominent ? Color.black.opacity(0.85) : Color.primary)
             .frame(maxWidth: .infinity, minHeight: 40)
             .background(prominent ? Color.white : Color.primary.opacity(0.08), in: Capsule())
@@ -313,7 +336,7 @@ struct CategoriesView: View {
 
             Section {
                 if model.categories.isEmpty {
-                    Text("还没有类别").foregroundStyle(.secondary)
+                    Text("还没有标签").foregroundStyle(.secondary)
                 }
                 ForEach($model.categories) { $category in
                     HStack(spacing: 10) {
@@ -344,19 +367,19 @@ struct CategoriesView: View {
                         }
                         .buttonStyle(.borderless)
                         .foregroundStyle(.secondary)
-                        .help("删除类别")
+                        .help("删除标签")
                         .accessibilityLabel("删除\(category.name)")
                     }
                 }
             } header: {
-                Text("类别")
+                Text("我的标签")
             } footer: {
-                Text("每个类别对应「日历」中的一个日历，颜色与之同步；由 Tomaboo 新建的日历可以在这里改颜色。完成的番茄钟会作为事件记录进去。")
+                Text("每个标签对应「日历」里的一个日历，颜色也和它一样。完成的番茄钟会记到对应的日历里；Tomaboo 新建的日历可以在这里改颜色。")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
 
-            Section("添加类别") {
+            Section("新建标签") {
                 TextField("名称", text: $newName, prompt: Text("例如：学习"))
                 Picker("记录到", selection: $newCalendarID) {
                     Text("新建同名日历").tag(String?.none)
