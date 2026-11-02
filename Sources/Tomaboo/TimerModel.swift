@@ -17,6 +17,10 @@ final class TimerModel {
     var categories: [Category] = [] {
         didSet { UserDefaults.standard.set(try? JSONEncoder().encode(categories), forKey: "categories") }
     }
+    /// Tomaboo 自己新建的日历：只有这些允许在 App 里改颜色
+    private(set) var createdCalendarIDs: Set<String> = [] {
+        didSet { UserDefaults.standard.set(Array(createdCalendarIDs), forKey: "createdCalendarIDs") }
+    }
     var selectedID: UUID? {
         didSet { UserDefaults.standard.set(selectedID?.uuidString, forKey: "selectedID") }
     }
@@ -36,6 +40,7 @@ final class TimerModel {
             categories = saved
         }
         selectedID = defaults.string(forKey: "selectedID").flatMap(UUID.init) ?? categories.first?.id
+        createdCalendarIDs = Set(defaults.stringArray(forKey: "createdCalendarIDs") ?? [])
 
         NotificationCenter.default.addObserver(forName: .EKEventStoreChanged, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.reloadCalendars() }
@@ -62,13 +67,29 @@ final class TimerModel {
     /// calendarID 为 nil 时新建同名日历
     func addCategory(name: String, calendarID: String?, color: NSColor) {
         do {
-            let id = try calendarID ?? calendarService.createCalendar(named: name, color: color).calendarIdentifier
+            let id: String
+            if let calendarID {
+                id = calendarID
+            } else {
+                id = try calendarService.createCalendar(named: name, color: color).calendarIdentifier
+                createdCalendarIDs.insert(id)
+            }
             categories.append(Category(name: name, calendarID: id))
             if selectedID == nil { selectedID = categories.last?.id }
             reloadCalendars()
             message = nil
         } catch {
             message = "新建日历失败：\(error.localizedDescription)"
+        }
+    }
+
+    // ponytail: 拖动取色时每次变化都写一次日历库，卡顿再改成停手后才保存
+    func setColor(_ color: NSColor, for category: Category) {
+        do {
+            try calendarService.setColor(color, calendarID: category.calendarID)
+            reloadCalendars()
+        } catch {
+            message = "修改颜色失败：\(error.localizedDescription)"
         }
     }
 

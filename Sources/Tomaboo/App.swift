@@ -317,7 +317,21 @@ struct CategoriesView: View {
                 }
                 ForEach($model.categories) { $category in
                     HStack(spacing: 10) {
-                        ColorDot(color: model.color(for: category))
+                        // 固定宽度的首列，色点和取色器下名称都对齐
+                        Group {
+                            if model.createdCalendarIDs.contains(category.calendarID) {
+                                ColorPicker("颜色", selection: Binding(
+                                    get: { model.color(for: category) },
+                                    set: { model.setColor(NSColor($0), for: category) }
+                                ), supportsOpacity: false)
+                                .labelsHidden()
+                                .controlSize(.small)
+                                .help("修改日历颜色")
+                            } else {
+                                ColorDot(color: model.color(for: category))
+                            }
+                        }
+                        .frame(width: 40, alignment: .leading)
                         TextField("名称", text: $category.name, prompt: Text("名称"))
                             .labelsHidden()
                         Picker("日历", selection: $category.calendarID) {
@@ -337,7 +351,7 @@ struct CategoriesView: View {
             } header: {
                 Text("类别")
             } footer: {
-                Text("每个类别对应「日历」中的一个日历，颜色与之同步。完成的番茄钟会作为事件记录进去。")
+                Text("每个类别对应「日历」中的一个日历，颜色与之同步；由 Tomaboo 新建的日历可以在这里改颜色。完成的番茄钟会作为事件记录进去。")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
