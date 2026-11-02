@@ -1,0 +1,36 @@
+#!/bin/bash
+# 用法：
+#   ./build.sh          构建本机版本并启动（开发用）
+#   ./build.sh release  构建通用版本（Apple 芯片 + Intel），打包成 TomatoDone.zip
+set -euo pipefail
+cd "$(dirname "$0")"
+APP=TomatoDone.app
+MODE="${1:-dev}"
+
+if [[ "$MODE" == "release" ]]; then
+    # 命令行工具不支持一次多架构，分别构建再用 lipo 合并
+    for arch in arm64 x86_64; do
+        swift build -c release --triple "$arch-apple-macosx14.0"
+    done
+    BIN=.build/TomatoDone-universal
+    lipo -create -output "$BIN" .build/arm64-apple-macosx/release/TomatoDone .build/x86_64-apple-macosx/release/TomatoDone
+else
+    swift build -c release
+    BIN=.build/release/TomatoDone
+    pkill -x TomatoDone || true
+fi
+
+rm -rf "$APP"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+cp "$BIN" "$APP/Contents/MacOS/TomatoDone"
+cp Info.plist "$APP/Contents/"
+cp AppIcon.icns "$APP/Contents/Resources/"
+codesign --force --sign - "$APP"
+
+if [[ "$MODE" == "release" ]]; then
+    rm -f TomatoDone.zip
+    ditto -c -k --keepParent "$APP" TomatoDone.zip
+    echo "已生成 TomatoDone.zip"
+else
+    open "$APP"
+fi

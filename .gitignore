@@ -1,0 +1,5 @@
+.build/
+.swiftpm/
+TomatoDone.app
+TomatoDone.zip
+.DS_Store
