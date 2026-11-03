@@ -1,0 +1,80 @@
+/* 面板 */
+"番茄钟" = "Pomodoro";
+"专注中" = "Focusing";
+"计时中" = "Timing";
+"分钟" = "min";
+"%lld 分钟" = "%lld minutes";
+"时长" = "Duration";
+"选择标签" = "Choose Tag";
+"标签" = "Tags";
+"倒计时" = "Countdown";
+"设定时长" = "Set a duration";
+"正计时" = "Stopwatch";
+"自由计时" = "Open-ended";
+"在做什么？" = "What are you working on?";
+"开始" = "Start";
+"完成" = "Finish";
+"放弃" = "Give Up";
+"确认放弃？" = "Really give up?";
+"在日历中查看 Done List" = "View your done list in Calendar";
+"设置…" = "Settings…";
+"退出 Tomaboo" = "Quit Tomaboo";
+"有新版本 %@，前往下载" = "Version %@ is available — download";
+
+/* 首次使用 */
+"先建一个标签" = "Create your first tag";
+"比如「学习」「工作」。\n完成的番茄钟会按标签自动记进日历。" = "Like “Study” or “Work”.\nFinished pomodoros are logged to Calendar by tag.";
+"新建标签" = "New Tag";
+
+/* 提示 */
+"先选一个标签" = "Pick a tag first";
+"不足 1 分钟，未记录" = "Under 1 minute — not logged";
+"✓ 已记录到「%@」" = "✓ Logged to “%@”";
+"写入日历失败：%@" = "Couldn't save to Calendar: %@";
+"新建日历失败：%@" = "Couldn't create calendar: %@";
+"修改颜色失败：%@" = "Couldn't change color: %@";
+"这个标签对应的日历找不到了，请在设置的「标签」里重新选一个日历" = "This tag's calendar can't be found. Pick another one in Settings › Tags.";
+
+/* 设置 */
+"设置" = "Settings";
+"通用" = "General";
+"快捷键" = "Shortcuts";
+"登录时打开" = "Open at Login";
+"语言" = "Language";
+"跟随系统" = "System Default";
+"重启 Tomaboo 后生效" = "Takes effect after restarting Tomaboo";
+"立即重启" = "Restart Now";
+"更新" = "Updates";
+"当前版本" = "Current Version";
+"自动检查更新" = "Check for updates automatically";
+"检查更新" = "Check for Updates";
+"正在检查…" = "Checking…";
+"已是最新版本" = "You're up to date";
+"检查失败，请稍后再试" = "Couldn't check. Try again later.";
+
+/* 设置 › 标签 */
+"没有日历权限，番茄钟无法写入日历" = "No Calendar access — sessions can't be saved";
+"打开系统设置" = "Open System Settings";
+"我的标签" = "My Tags";
+"还没有标签" = "No tags yet";
+"每个标签对应「日历」里的一个日历，颜色也和它一样。完成的番茄钟会记到对应的日历里；Tomaboo 新建的日历可以在这里改颜色。" = "Each tag maps to a calendar in Calendar and shares its color. Finished pomodoros are saved to that calendar. Calendars created by Tomaboo can be recolored here.";
+"名称" = "Name";
+"例如：学习" = "e.g. Study";
+"日历" = "Calendar";
+"记录到" = "Log To";
+"新建同名日历" = "New Calendar with Same Name";
+"日历颜色" = "Calendar Color";
+"颜色" = "Color";
+"修改日历颜色" = "Change calendar color";
+"添加" = "Add";
+"删除标签" = "Delete tag";
+"删除%@" = "Delete %@";
+
+/* 设置 › 快捷键 */
+"开始 / 完成" = "Start / Finish";
+"打开面板" = "Open Panel";
+"按下快捷键…" = "Press shortcut…";
+"未设置" = "Not Set";
+"清除" = "Clear";
+"已被其他 App 占用" = "Used by another app";
+"在任何 App 里都能用。「开始 / 完成」：空闲时开始计时，正计时中完成；倒计时中不响应，番茄不可分割。" = "Works in any app. Start / Finish starts a timer when idle and finishes a stopwatch session. It does nothing during a countdown — a pomodoro can't be split.";

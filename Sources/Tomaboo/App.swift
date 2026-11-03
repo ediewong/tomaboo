@@ -3,18 +3,30 @@ import EventKit
 
 @main
 struct TomabooApp: App {
-    @State private var model = TimerModel()
+    @State private var model: TimerModel
+    @State private var updater = Updater()
+
+    init() {
+        let model = TimerModel()
+        _model = State(initialValue: model)
+        HotKeyCenter.shared.handlers = [
+            .startFinish: { model.toggleFromShortcut() },
+            .panel: { toggleMenuBarPanel() },
+        ]
+        HotKeyCenter.shared.registerAll()
+    }
 
     var body: some Scene {
         MenuBarExtra {
-            TimerPanel().environment(model)
+            TimerPanel().environment(model).environment(updater)
         } label: {
             MenuBarLabel().environment(model)
+                .task { await updater.checkOnLaunch() }
         }
         .menuBarExtraStyle(.window)
 
-        Window("标签", id: "categories") {
-            CategoriesView().environment(model)
+        Window("设置", id: "settings") {
+            SettingsView().environment(model).environment(updater)
         }
         .windowResizability(.contentSize)
     }
@@ -48,22 +60,24 @@ struct ColorDot: View {
     }
 }
 
-private func openCategories(_ openWindow: OpenWindowAction) {
-    openWindow(id: "categories")
-    NSApp.activate(ignoringOtherApps: true)
-}
-
-// MARK: - 菜单栏计时面板（深色磨砂玻璃）
+// MARK: - 菜单栏计时面板
 
 struct TimerPanel: View {
     @Environment(TimerModel.self) private var model
+    @Environment(Updater.self) private var updater
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         VStack(spacing: 18) {
             header
+            if case .available(let version, let url) = updater.state {
+                Link(destination: url) {
+                    Label("有新版本 \(version)，前往下载", systemImage: "arrow.down.circle.fill")
+                        .font(.callout)
+                }
+            }
             if model.categories.isEmpty {
-                EmptyState { openCategories(openWindow) }
+                EmptyState { openSettings(openWindow, tab: "tags") }
             } else {
                 TimerContent()
             }
@@ -83,13 +97,13 @@ struct TimerPanel: View {
             .help("在日历中查看 Done List")
 
             Spacer()
-            Text(model.isRunning ? (model.countdown ? "专注中" : "计时中") : "番茄钟")
+            Text(model.isRunning ? (model.countdown ? "专注中" : "计时中") as LocalizedStringKey : "番茄钟")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.primary)
             Spacer()
 
             Menu {
-                Button("管理标签…") { openCategories(openWindow) }
+                Button("设置…") { openSettings(openWindow) }
                     .keyboardShortcut(",")
                 Divider()
                 Button("退出 Tomaboo") { NSApp.terminate(nil) }
@@ -140,7 +154,7 @@ private struct TimerContent: View {
                         .pickerStyle(.inline)
                         .labelsHidden()
                     } label: {
-                        Text(model.selected?.name ?? "选择标签")
+                        if let name = model.selected?.name { Text(name) } else { Text("选择标签") }
                     }
                     .menuStyle(.borderlessButton)
                     .fixedSize()
@@ -167,7 +181,7 @@ private struct TimerContent: View {
                 Button {
                     if confirmingAbandon { model.stop() } else { confirmAbandon() }
                 } label: {
-                    Text(confirmingAbandon ? "确认放弃？" : "放弃")
+                    Text(confirmingAbandon ? "确认放弃？" as LocalizedStringKey : "放弃")
                         .foregroundStyle(confirmingAbandon ? Color.red : Color.primary)
                 }
                 .buttonStyle(CapsuleButtonStyle(prominent: false))
@@ -252,7 +266,7 @@ private struct ModeCard: View {
         .glassFill(in: RoundedRectangle(cornerRadius: 18))
     }
 
-    private func half(_ title: String, subtitle: String, icon: String, selected: Bool, action: @escaping () -> Void) -> some View {
+    private func half(_ title: LocalizedStringKey, subtitle: LocalizedStringKey, icon: String, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 10) {
                 Image(systemName: icon).font(.system(size: 17))
@@ -307,7 +321,7 @@ extension View {
     }
 }
 
-// MARK: - 类别管理窗口
+// MARK: - 设置里的「标签」页
 
 struct CategoriesView: View {
     @Environment(TimerModel.self) private var model
@@ -410,6 +424,5 @@ struct CategoriesView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 460, height: 520)
     }
 }

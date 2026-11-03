@@ -17,7 +17,8 @@ if [[ "$MODE" == "release" ]]; then
 else
     swift build -c release
     BIN=.build/release/Tomaboo
-    pkill -x Tomaboo || true
+    # 等旧进程退出，否则紧接着 open 会报 -600
+    pkill -x Tomaboo && sleep 1 || true
 fi
 
 rm -rf "$APP"
@@ -25,6 +26,7 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/Tomaboo"
 cp Info.plist "$APP/Contents/"
 cp AppIcon.icns "$APP/Contents/Resources/"
+cp -R Resources/*.lproj "$APP/Contents/Resources/"
 codesign --force --sign - "$APP"
 
 if [[ "$MODE" == "release" ]]; then

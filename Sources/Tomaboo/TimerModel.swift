@@ -79,7 +79,7 @@ final class TimerModel {
             reloadCalendars()
             message = nil
         } catch {
-            message = "新建日历失败：\(error.localizedDescription)"
+            message = String(localized: "新建日历失败：\(error.localizedDescription)")
         }
     }
 
@@ -89,7 +89,7 @@ final class TimerModel {
             try calendarService.setColor(color, calendarID: category.calendarID)
             reloadCalendars()
         } catch {
-            message = "修改颜色失败：\(error.localizedDescription)"
+            message = String(localized: "修改颜色失败：\(error.localizedDescription)")
         }
     }
 
@@ -122,7 +122,7 @@ final class TimerModel {
     }
 
     func start() {
-        guard selected != nil else { message = "先选一个标签"; return }
+        guard selected != nil else { message = String(localized: "先选一个标签"); return }
         startDate = Date()
         now = startDate!
         message = nil
@@ -147,16 +147,21 @@ final class TimerModel {
         guard let start = startDate, let category = selected else { return }
         stop()
         guard end.timeIntervalSince(start) >= 60 else {
-            message = "不足 1 分钟，未记录"
+            message = String(localized: "不足 1 分钟，未记录")
             return
         }
         let title = task.trimmingCharacters(in: .whitespaces).isEmpty ? category.name : task
         do {
             try calendarService.log(title: title, start: start, end: end, calendarID: category.calendarID)
-            message = "✓ 已记录到「\(calendar(for: category)?.title ?? category.name)」"
+            message = String(localized: "✓ 已记录到「\(calendar(for: category)?.title ?? category.name)」")
         } catch {
-            message = "写入日历失败：\(error.localizedDescription)"
+            message = String(localized: "写入日历失败：\(error.localizedDescription)")
         }
+    }
+
+    /// 全局快捷键：空闲时开始，正计时中完成；倒计时不可打断
+    func toggleFromShortcut() {
+        if !isRunning { start() } else if !countdown { finish() } else { NSSound.beep() }
     }
 
     /// 放弃：不写入
